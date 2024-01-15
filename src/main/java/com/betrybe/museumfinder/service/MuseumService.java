@@ -50,10 +50,12 @@ public class MuseumService implements MuseumServiceInterface {
 
   @Override
   public Museum createMuseum(Museum museum) throws InvalidCoordinateException {
+    // Valida as coordenadas
     if (!CoordinateUtil.isCoordinateValid(museum.getCoordinate())) {
       throw new InvalidCoordinateException();
     }
 
+    // Retorna o museu encontrado
     return museumFakeDatabase.saveMuseum(museum);
   }
 
