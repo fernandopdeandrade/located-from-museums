@@ -49,7 +49,7 @@ public class MuseumService implements MuseumServiceInterface {
   }
 
   @Override
-  public Museum createMuseum(Museum museum) throws InvalidCoordinateException {
+  public Museum createMuseum(Museum museum) {
     // Valida as coordenadas
     if (!CoordinateUtil.isCoordinateValid(museum.getCoordinate())) {
       throw new InvalidCoordinateException();
@@ -61,6 +61,12 @@ public class MuseumService implements MuseumServiceInterface {
 
   @Override
   public Optional<Museum> getMuseum(Long id) {
-    return museumFakeDatabase.getMuseum(id);
+    Optional<Museum> museumresult = museumFakeDatabase.getMuseum(id);
+
+    if (museumresult.isEmpty()) {
+      throw new MuseumNotFoundException();
+    }
+
+    return museumresult;
   }
 }

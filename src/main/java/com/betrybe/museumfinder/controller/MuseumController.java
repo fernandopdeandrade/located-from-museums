@@ -1,6 +1,9 @@
 package com.betrybe.museumfinder.controller;
 
+import com.betrybe.museumfinder.advice.GeneralControllerAdvice;
 import com.betrybe.museumfinder.dto.MuseumCreationDto;
+import com.betrybe.museumfinder.exception.DefaulException;
+import com.betrybe.museumfinder.exception.InvalidCoordinateException;
 import com.betrybe.museumfinder.model.Coordinate;
 import com.betrybe.museumfinder.model.Museum;
 import com.betrybe.museumfinder.service.MuseumServiceInterface;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * The type Museum controller.
@@ -73,10 +77,17 @@ public class MuseumController {
       @RequestParam(name = "lng") double lng,
       @RequestParam(name = "max_dist_km") double max_dist_km
   ) {
+    try {
       Coordinate cord = new Coordinate(lat, lng);
-
       Museum response = museumService.getClosestMuseum(cord, max_dist_km);
 
       return ResponseEntity.status(HttpStatus.OK).body(response);
+    }  catch (InvalidCoordinateException e) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Coordenada inválida!", e);
+    } catch (DefaulException e) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Erro interno!", e);
+    }
   }
 }
