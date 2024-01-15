@@ -1,8 +1,6 @@
 package com.betrybe.museumfinder.service;
 
 import com.betrybe.museumfinder.database.MuseumFakeDatabase;
-import com.betrybe.museumfinder.dto.MuseumCreationDto;
-import com.betrybe.museumfinder.dto.MuseumDto;
 import com.betrybe.museumfinder.exception.InvalidCoordinateException;
 import com.betrybe.museumfinder.exception.MuseumNotFoundException;
 import com.betrybe.museumfinder.model.Coordinate;
@@ -60,7 +58,7 @@ public class MuseumService implements MuseumServiceInterface {
   }
 
   @Override
-  public Museum getMuseum(Long id) {
-    return null;
+  public Optional<Museum> getMuseum(Long id) {
+    return museumFakeDatabase.getMuseum(id);
   }
 }
