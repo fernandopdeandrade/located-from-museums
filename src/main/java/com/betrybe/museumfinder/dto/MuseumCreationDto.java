@@ -2,7 +2,6 @@ package com.betrybe.museumfinder.dto;
 
 import com.betrybe.museumfinder.model.Coordinate;
 import com.betrybe.museumfinder.model.Museum;
-import java.util.List;
 
 /**
  * The type Museum creation dto.

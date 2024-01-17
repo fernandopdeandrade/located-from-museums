@@ -1,6 +1,5 @@
 package com.betrybe.museumfinder.evaluation;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,10 +22,15 @@ class ActuatorTest {
 
   @Test
   @DisplayName("02 - Spring Boot Actuator configurado")
-  void testSpringActuatorEndpoints() throws Exception {
-    mockMvc.perform(get("/actuator/health").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.status").value("UP"));
+  void springActuatorEndpoints() throws Exception {
+    MediaType jsonMediaType = MediaType.APPLICATION_JSON;
+    if (jsonMediaType != null) {
+          mockMvc.perform(get("/actuator/health").accept(jsonMediaType))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(jsonMediaType))
+            .andExpect(jsonPath("$.status").value("UP"));
+    } else {
+         throw new IllegalStateException("MediaType.APPLICATION_JSON is null");
+      }
   }
 }

@@ -1,8 +1,8 @@
 package com.betrybe.museumfinder.evaluation;
 
-import static com.betrybe.museumfinder.util.ModelDtoConverter.modelToDto;
 import static com.betrybe.museumfinder.evaluation.utils.TestHelpers.createMockMuseum;
 import static com.betrybe.museumfinder.evaluation.utils.TestHelpers.objectToJson;
+import static com.betrybe.museumfinder.util.ModelDtoConverter.modelToDto;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,13 +12,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.betrybe.museumfinder.dto.MuseumDto;
-import com.betrybe.museumfinder.model.Coordinate;
-import com.betrybe.museumfinder.model.Museum;
-import com.betrybe.museumfinder.service.MuseumServiceInterface;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,28 +31,40 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.betrybe.museumfinder.dto.MuseumDto;
+import com.betrybe.museumfinder.model.Coordinate;
+import com.betrybe.museumfinder.model.Museum;
+import com.betrybe.museumfinder.service.MuseumServiceInterface;
+
+import io.micrometer.common.lang.Nullable;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Req 07")
-public class ControllerErrorTest {
+class ControllerErrorTest {
   @MockBean
   MuseumServiceInterface service;
 
   MockMvc mockMvc;
 
-  @BeforeEach
-  public void setup(WebApplicationContext wac) {
+    @BeforeEach
+    void setup(@Nullable WebApplicationContext wac) {
+    Charset charset = StandardCharsets.UTF_8;
     // We need this to make sure the response body is in UTF-8,
     // since we're testing raw strings
-    this.mockMvc = MockMvcBuilders
-        .webAppContextSetup(wac)
-        .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-        .build();
+    if (wac != null && charset != null) {
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(wac)
+            .defaultResponseCharacterEncoding(charset)
+            .build();
+    } else {
+        throw new IllegalArgumentException("WebApplicationContext cannot be null");
+    }
   }
 
   @Test
   @DisplayName("07 - Classe com @ControllerAdvice tratando erros")
-  void testControllerErrorCodes() throws Exception {
+  void controllerErrorCodes() throws Exception {
     Exception runtimeException = new RuntimeException();
     Exception invalidCoordinateException = createInvalidCoordinateException();
     Exception museumNotFoundException = createMuseumNotFoundException();

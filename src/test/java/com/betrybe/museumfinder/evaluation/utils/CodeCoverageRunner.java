@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+
 import org.xml.sax.SAXException;
 
 public class CodeCoverageRunner {
@@ -25,8 +27,8 @@ public class CodeCoverageRunner {
     this.profileName = profileName;
   }
   public double run() {
-    String reportPath = String.format("%s/site/jacoco/jacoco.xml", buildDir);
-    String outFile = String.format("%s.log", buildDir);
+    String reportPath = "%s/site/jacoco/jacoco.xml".formatted(buildDir);
+    String outFile = "%s.log".formatted(buildDir);
 
     String[] mvnCmd = new String[]{
         /*

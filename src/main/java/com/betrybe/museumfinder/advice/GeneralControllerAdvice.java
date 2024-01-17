@@ -1,12 +1,12 @@
 package com.betrybe.museumfinder.advice;
 
-import com.betrybe.museumfinder.exception.InvalidCoordinateException;
-import com.betrybe.museumfinder.exception.MuseumNotFoundException;
-import com.betrybe.museumfinder.exception.DefaulException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.betrybe.museumfinder.exception.InvalidCoordinateException;
+import com.betrybe.museumfinder.exception.MuseumNotFoundException;
 
 /**
  * The type General controller advice.
@@ -42,8 +42,8 @@ public class GeneralControllerAdvice {
    * @param e the e
    * @return the response entity
    */
-  @ExceptionHandler(DefaulException.class)
-  public ResponseEntity<String> defaulException(DefaulException e) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno!");
-  }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno!");
+    }
 }

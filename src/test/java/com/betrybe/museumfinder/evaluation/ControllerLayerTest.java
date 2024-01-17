@@ -1,19 +1,15 @@
 package com.betrybe.museumfinder.evaluation;
 
-import static com.betrybe.museumfinder.util.ModelDtoConverter.modelToDto;
 import static com.betrybe.museumfinder.evaluation.utils.TestHelpers.createMockMuseum;
 import static com.betrybe.museumfinder.evaluation.utils.TestHelpers.objectToJson;
+import static com.betrybe.museumfinder.util.ModelDtoConverter.modelToDto;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.betrybe.museumfinder.dto.MuseumDto;
-import com.betrybe.museumfinder.model.Museum;
-import com.betrybe.museumfinder.service.MuseumServiceInterface;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,10 +20,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.betrybe.museumfinder.dto.MuseumDto;
+import com.betrybe.museumfinder.model.Museum;
+import com.betrybe.museumfinder.service.MuseumServiceInterface;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Req 05-06")
-public class ControllerLayerTest {
+class ControllerLayerTest {
 
   @MockBean
   MuseumServiceInterface museumsServiceInterface;
@@ -37,7 +37,7 @@ public class ControllerLayerTest {
 
   @Test
   @DisplayName("05 - Rota POST /museums implementada")
-  void testMuseumCreation() throws Exception {
+  void museumCreation() throws Exception {
     Museum museum = createMockMuseum(33L);
     Mockito.when(museumsServiceInterface.createMuseum(any())).thenReturn(museum);
 
@@ -62,7 +62,7 @@ public class ControllerLayerTest {
 
   @Test
   @DisplayName("06 - Rota GET /museums/closest implementada")
-  void testGetClosestMuseum() throws Exception {
+  void getClosestMuseum() throws Exception {
     Museum museum = createMockMuseum(11L);
     Mockito.when(museumsServiceInterface.getClosestMuseum(any(), any())).thenReturn(museum);
 

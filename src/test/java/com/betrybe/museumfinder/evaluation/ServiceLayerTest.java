@@ -7,11 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import com.betrybe.museumfinder.database.MuseumFakeDatabase;
-import com.betrybe.museumfinder.model.Coordinate;
-import com.betrybe.museumfinder.model.Museum;
-import com.betrybe.museumfinder.service.MuseumServiceInterface;
 import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -19,6 +16,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import com.betrybe.museumfinder.database.MuseumFakeDatabase;
+import com.betrybe.museumfinder.model.Coordinate;
+import com.betrybe.museumfinder.model.Museum;
+import com.betrybe.museumfinder.service.MuseumServiceInterface;
 
 @SpringBootTest
 @DisplayName("Req 03-04")
@@ -32,7 +34,7 @@ class ServiceLayerTest {
 
   @Test
   @DisplayName("03 - Método createMuseum da classe de serviço implementado")
-  void testMuseumCreation() {
+  void museumCreation() {
     // Regular test
     Museum mockMuseum = createMockMuseum(33L);
     Mockito.when(museumFakeDatabase.saveMuseum(any())).thenReturn(mockMuseum);
@@ -56,7 +58,7 @@ class ServiceLayerTest {
 
   @Test
   @DisplayName("04 - Método getClosestMuseum da classe de serviço implementado")
-  void testGetClosestMuseum() {
+  void getClosestMuseum() {
     testGetClosestMuseumOk();
     testGetClosestMuseumNotFoundException();
     testGetClosestMuseumInvalidCoordinateException();

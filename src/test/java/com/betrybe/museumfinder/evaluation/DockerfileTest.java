@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class DockerfileTest {
 
   @Test
   @DisplayName("10 - Dockerfile configurado corretamente")
-  void testDockerfileConfiguredCorrectly() {
+  void dockerfileConfiguredCorrectly() {
     // Tests about build-image
     assertAtLeastOneCommandMatch((dc) -> (
         "FROM".equals(dc.cmd)
