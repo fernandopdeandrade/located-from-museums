@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,29 +78,40 @@ class ControllerErrorTest {
     testPostForException(invalidCoordinateException, HttpStatus.BAD_REQUEST, "Coordenada inválida!");
   }
 
-  private void testGetForException(Exception exception, HttpStatus status, String expectedBody) throws Exception {
+private void testGetForException(Exception exception, HttpStatus status, String expectedBody) throws Exception {
     Mockito.reset(service);
     Mockito.when(service.getClosestMuseum(any(Coordinate.class), anyDouble())).thenThrow(exception);
-    mockMvc.perform(
-            get("/museums/closest?lat=12.34&lng=23.45&max_dist_km=10")
-                .accept(MediaType.APPLICATION_JSON)
-        )
-        .andExpect(status().is(status.value()))
-        .andExpect(content().string(containsString(expectedBody)));
+    
+    Matcher<String> matcher = containsString(expectedBody);
+    if (matcher != null) {
+        mockMvc.perform(
+                get("/museums/closest?lat=12.34&lng=23.45&max_dist_km=10")
+                    .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().is(status.value()))
+            .andExpect(content().string(matcher));
+    } else {
+        throw new IllegalStateException("Matcher cannot be null");
+    }
 
     Mockito.verify(service).getClosestMuseum(any(), any());
-  }
+}
 
-  private void testPostForException(Exception exception, HttpStatus status, String expectedBody) throws Exception {
+private void testPostForException(Exception exception, HttpStatus status, String expectedBody) throws Exception {
     Mockito.reset(service);
     Mockito.when(service.createMuseum(any())).thenThrow(exception);
 
-    performCreationPost(createMockMuseum(null))
-        .andExpect(status().is(status.value()))
-        .andExpect(content().string(containsString(expectedBody)));
+    Matcher<String> matcher = containsString(expectedBody);
+    if (matcher != null) {
+        performCreationPost(createMockMuseum(null))
+            .andExpect(status().is(status.value()))
+            .andExpect(content().string(matcher));
+    } else {
+        throw new IllegalStateException("Matcher cannot be null");
+    }
 
     Mockito.verify(service).createMuseum(any());
-  }
+}
 
   private Exception createInvalidCoordinateException() {
     return (Exception) instantiateClassByName(
@@ -125,8 +137,13 @@ class ControllerErrorTest {
   private ResultActions performCreationPost(Museum museum) throws Exception {
     MuseumDto museumDto = modelToDto(museum);
 
-    return mockMvc.perform(post("/museums")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectToJson(museumDto)));
+    String content = objectToJson(museumDto);
+    if (content != null) {
+        return mockMvc.perform(post("/museums")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(content));
+    } else {
+        throw new IllegalStateException("Content cannot be null");
+    }
   }
 }

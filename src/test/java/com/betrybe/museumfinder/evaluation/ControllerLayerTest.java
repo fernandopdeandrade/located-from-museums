@@ -35,49 +35,63 @@ class ControllerLayerTest {
   @Autowired
   MockMvc mockMvc;
 
-  @Test
-  @DisplayName("05 - Rota POST /museums implementada")
-  void museumCreation() throws Exception {
+@Test
+@DisplayName("05 - Rota POST /museums implementada")
+void museumCreation() throws Exception {
     Museum museum = createMockMuseum(33L);
     Mockito.when(museumsServiceInterface.createMuseum(any())).thenReturn(museum);
 
     MuseumDto toSaveMuseum = modelToDto(createMockMuseum(null));
+    String content = objectToJson(toSaveMuseum);
 
-    mockMvc.perform(post("/museums")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectToJson(toSaveMuseum)))
-        .andExpect(status().isCreated())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name").value(museum.getName()))
-        .andExpect(jsonPath("$.address").value(museum.getAddress()))
-        .andExpect(jsonPath("$.description").value(museum.getDescription()))
-        .andExpect(jsonPath("$.collectionType").value(museum.getCollectionType()))
-        .andExpect(jsonPath("$.subject").value(museum.getSubject()))
-        .andExpect(jsonPath("$.url").value(museum.getUrl()))
-        .andExpect(jsonPath("$.coordinate.latitude").value(museum.getCoordinate().latitude()))
-        .andExpect(jsonPath("$.coordinate.longitude").value(museum.getCoordinate().longitude()));
+    if (content != null) {
+      MediaType mediaType = MediaType.APPLICATION_JSON;
+      if (mediaType != null) {
+        mockMvc.perform(post("/museums")
+            .contentType(mediaType)
+            .content(content))
+          .andExpect(status().isCreated())
+          .andExpect(content().contentType(mediaType))
+          .andExpect(jsonPath("$.name").value(museum.getName()))
+          .andExpect(jsonPath("$.address").value(museum.getAddress()))
+          .andExpect(jsonPath("$.description").value(museum.getDescription()))
+          .andExpect(jsonPath("$.collectionType").value(museum.getCollectionType()))
+          .andExpect(jsonPath("$.subject").value(museum.getSubject()))
+          .andExpect(jsonPath("$.url").value(museum.getUrl()))
+          .andExpect(jsonPath("$.coordinate.latitude").value(museum.getCoordinate().latitude()))
+          .andExpect(jsonPath("$.coordinate.longitude").value(museum.getCoordinate().longitude()));
+      }
+    } else {
+        throw new IllegalStateException("Content cannot be null");
+    }
 
     Mockito.verify(museumsServiceInterface).createMuseum(any());
-  }
+}
 
-  @Test
-  @DisplayName("06 - Rota GET /museums/closest implementada")
-  void getClosestMuseum() throws Exception {
+@Test
+@DisplayName("06 - Rota GET /museums/closest implementada")
+void getClosestMuseum() throws Exception {
     Museum museum = createMockMuseum(11L);
     Mockito.when(museumsServiceInterface.getClosestMuseum(any(), any())).thenReturn(museum);
 
-    mockMvc.perform(
-          get("/museums/closest?lat=12.34&lng=23.45&max_dist_km=10")
-          .accept(MediaType.APPLICATION_JSON)
-        )
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name").value(museum.getName()))
-        .andExpect(jsonPath("$.coordinate.latitude").value(museum.getCoordinate().latitude()))
-        .andExpect(jsonPath("$.coordinate.longitude").value(museum.getCoordinate().longitude()));
+    if (MediaType.APPLICATION_JSON != null) {
+      MediaType mediaType = MediaType.APPLICATION_JSON;
+      mockMvc.perform(
+        get("/museums/closest?lat=12.34&lng=23.45&max_dist_km=10")
+        .accept(mediaType)
+      )
+      .andExpect(status().isOk())
+      .andExpect(content().contentType(mediaType))
+      .andExpect(jsonPath("$.name").value(museum.getName()))
+      .andExpect(jsonPath("$.coordinate.latitude").value(museum.getCoordinate().latitude()))
+      .andExpect(jsonPath("$.coordinate.longitude").value(museum.getCoordinate().longitude()));
 
-    Mockito.verify(museumsServiceInterface).getClosestMuseum(any(), any());
+      Mockito.verify(museumsServiceInterface).getClosestMuseum(any(), any());
+    } else {
+        // Trate o caso em que MediaType.APPLICATION_JSON é null
+        throw new IllegalStateException("MediaType.APPLICATION_JSON cannot be null");
+    }
 
     Mockito.reset(museumsServiceInterface);
-  }
+ }
 }
